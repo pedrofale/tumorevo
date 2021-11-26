@@ -1,8 +1,8 @@
 """
 Simulate tumor growth under different spatial models. Inspired by Noble et al, 2019.
 """
-from cell import TumorCell
-import modes as modes
+from .cell import TumorCell
+from .modes import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -23,15 +23,24 @@ parser.add_argument('--output_path', default='./')
 parser.add_argument('--plot', default=False)
 
 MODE_LIST = [
-	modes.simulate_nonspatial,
-	modes.simulate_invasion,
-	modes.simulate_fission,
-	modes.simulate_boundary, 
+	simulate_nonspatial,
+	simulate_invasion,
+	simulate_fission,
+	simulate_boundary, 
 ]
 
-def main(mode, output_path, plot, n_steps=1000, n_genes=1000, **kwargs):
+def main():
+	args = parser.parse_args()
+
+	mode = args.mode
+	output_path = args.output_path
+	plot = args.plot
+	carrying_capacity = int(args.carrying_capacity)
+	n_genes=int(args.n_genes)
+	n_steps=int(args.n_steps)
+
 	tumor_cell = TumorCell(n_genes=n_genes)
-	env, traces = MODE_LIST[mode](n_steps, tumor_cell, **kwargs)
+	env, traces = MODE_LIST[mode](n_steps, tumor_cell)
 	print(env.get_genotype_frequencies())
 	print(len(env.cells))
 	#print(env.get_diversity())
@@ -57,5 +66,4 @@ def prepare_muller(genotype_counts, genotype_parents):
 	return pop_df, anc_df, color_by
 
 if __name__ == '__main__':
-	args = parser.parse_args()
-	main(args.mode, args.output_path, args.plot, carrying_capacity=int(args.carrying_capacity), n_genes=int(args.n_genes), n_steps=int(args.n_steps))
+	main()

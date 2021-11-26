@@ -1,6 +1,6 @@
-from tumor import Tumor
-from deme import Deme
-from cell import Cell, TumorCell
+from .tumor import Tumor
+from .deme import Deme
+from .cell import Cell, TumorCell
 
 from tqdm import tqdm
 from copy import deepcopy

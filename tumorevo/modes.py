@@ -13,7 +13,7 @@ def simulate_nonspatial(n_steps, cell, **kwargs):
 	traces.append(dict(genotypes_counts=deepcopy(deme.genotypes_counts),
 				genotypes_parents=deme.genotypes_parents))
 	# Simulate within-deme dynamics
-	for step in tqdm(range(n_steps)):
+	for step in tqdm(range(n_steps-1)):
 		deme.update()
 		traces.append(dict(genotypes_counts=deepcopy(deme.genotypes_counts),
                                 genotypes_parents=deme.genotypes_parents))

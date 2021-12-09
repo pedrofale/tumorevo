@@ -12,15 +12,13 @@ import os
 from pymuller import muller
 
 @click.command(help="Plot the evolution of a tumor.")
-@click.option(
-	"-f1",
-	"--genotype-counts",
-	help="CSV file containing counts of genotypes at each time step."
+@click.argument(
+	"genotype-counts",
+	type=click.Path(exists=True, dir_okay=False),
 )
-@click.option(
-	"-f2",
-	"--genotype-parents",
-	help="CSV file containing the parents of each genotype across all time steps."
+@click.argument(
+	"genotype-parents",
+	type=click.Path(exists=True, dir_okay=False),
 )
 @click.option(
 	"-c",

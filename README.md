@@ -64,5 +64,13 @@ Options:
   -c, --cells INTEGER           Number of cells in slice plot.
   -r, --average-radius INTEGER  Average radius of circles in slice plot.
   -m, --colormap TEXT           Colormap for genotypes.
+  --plot                        Plot all the figures.
+  --do-muller                   Make a Muller plot.
+  --do-slice                    Make a slice plot.
+  --do-tree                     Make a clone tree plot.
+  --normalize                   Normalize the abundances in the Muller plot.
+  --labels                      Annotate the clone tree plot.
+  --remove                      Remove empty clones in the clone tree plot.
+  -o, --output-path TEXT        Directory to write figures into.
   --help                        Show this message and exit.
 ```

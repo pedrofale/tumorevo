@@ -16,6 +16,7 @@ $ pip install tumorevo
 
 `tumorevo` contains two command line utilities: `tumorsim` and `tumorfig`.
 
+### Simulating tumor evolution
 `tumorsim` can be used to simulate the evolution of a tumor according to a specified spatial structure.
 ```bash
 $ tumorsim --n_cells 2000 --n_genes 1000 --mode 0
@@ -46,6 +47,7 @@ Options:
   --help                          Show this message and exit.
 ```
 
+### Plotting tumor evolution
 `tumorfig` can be used to create a Muller plot of the tumor's evolution, the 2D spatial organization of the tumor cells, and a clone tree.
 ```bash
 $ tumorfig trace_counts.csv parents.csv

@@ -28,7 +28,7 @@ This will create a folder containing:
 * `genotypes.csv`: file containing the genotypes of each clone.
 
 Full overview:
-```bash
+```
 $ tumorsim --help
 Usage: tumorsim [OPTIONS]
 
@@ -54,7 +54,8 @@ $ tumorfig trace_counts.csv parents.csv
 ```
 
 Full overview:
-```bash
+```
+$ tumorfig --help
 Usage: tumorfig [OPTIONS] GENOTYPE_COUNTS GENOTYPE_PARENTS
 
   Plot the evolution of a tumor.

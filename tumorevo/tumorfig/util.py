@@ -18,7 +18,7 @@ def prepare_plots(genotype_counts, genotype_parents):
         return pop_df, anc_df, color_by
 
 
-def plot_slice(n_cells, genotype_counts, populations_df, adjacency_df, color_by, average_radius=10, colormap="terrain", ax=None):
+def plot_deme(n_cells, genotype_counts, populations_df, adjacency_df, color_by, average_radius=10, colormap="terrain", ax=None):
 	"""Create a circle for each cell and color it by genotype.
 	The colors are consistent with the Muller plots.
 	"""
@@ -44,7 +44,7 @@ def plot_slice(n_cells, genotype_counts, populations_df, adjacency_df, color_by,
 		radii = radii + g_radii
 		colors = colors + [color_map[i]]*n
 
-	# Randomly permute cells to model well mixed population
+	# Randomly permute cells to model well mixed population in deme
 	perm = np.random.choice(len(radii), size=len(radii), replace=False)
 	radii = np.array(radii)[perm]
 	colors = np.array(colors)[perm]

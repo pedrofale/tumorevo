@@ -50,12 +50,19 @@ MODE_LIST = [
    help="Divison rate."
 )
 @click.option(
+    "-r",
+    "--random_seed",
+    default=42,
+    help="Random seed for the pseudo random number generator."
+)
+@click.option(
    "-o",
    "--output-path",
    default="./out",
    help="Output directory"
 )
-def main(mode, carrying_capacity, genes, steps, division_rate, output_path):
+def main(mode, carrying_capacity, genes, steps, division_rate, random_seed, output_path):
+	np.random.seed(random_seed)
 	tumor_cell = TumorCell(n_genes=genes, division_rate=division_rate)
 	env, traces = MODE_LIST[mode](steps, tumor_cell)
 	genotypes, _ = env.get_genotype_frequencies()

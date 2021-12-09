@@ -8,8 +8,9 @@ class Deme(object):
 		self.maximum_death_rate = min(cell.max_birth_rate * 10, .2)
 		self.death_rate = self.initial_death_rate
 		self.init_cell = cell
+		self.init_cell.genotype_id = str(0) + str(cell.genotype_id)
 		self.cells = set()
-		self.cells.add(cell)
+		self.cells.add(self.init_cell)
 		self.genotypes_counts = dict()
 		self.genotypes_counts[cell.genotype_id] = 1
 		self.genotypes_parents = dict()

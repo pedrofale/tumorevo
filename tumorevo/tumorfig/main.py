@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 import click
 import os
+from pathlib import Path
 
 from pymuller import muller
 
@@ -105,7 +106,7 @@ def main(genotype_counts, genotype_parents, cells, average_radius, colormap, plo
 			plt.savefig(os.path.join(output_path, 'slice.png'), bbox_inches='tight')	
 
 		if do_tree:
-                        ax = plot_tree(genotype_parents, color_by, genotype_counts=genotype_counts.iloc[-1], 
+                        ax = plot_tree(genotype_parents, pop_df, anc_df, color_by, genotype_counts=genotype_counts.iloc[-1], 
 					filter_clones=remove, labels=labels, colormap=colormap)
                         plt.savefig(os.path.join(output_path, 'tree.png'), bbox_inches='tight')
 if __name__ == "__main__":

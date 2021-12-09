@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "tumorevo"
 version = "0.0.1"
-description = "Simulate tumor evolution under different spatial constraints."
+description = "Simulate and illustrate tumor evolution under different spatial constraints."
 license = "MIT"
 authors = ["pedrofale <pedro.miguel.ferreira.pf@gmail.com>"]
 readme = "README.md"
@@ -13,6 +13,7 @@ pandas = "^1.3.2"
 numpy = "^1.21.2"
 pymuller = "^0.1.2"
 click = "^8.0.1"
+packcircles = ">=0.14"
 
 [tool.poetry.dev-dependencies]
 bump2version = "^1.0.1"
@@ -21,3 +22,4 @@ pytest = "^6.2.4"
 
 [tool.poetry.scripts]
 tumorevo = "tumorevo:main"
+tumorfig = "tumorfig:main"

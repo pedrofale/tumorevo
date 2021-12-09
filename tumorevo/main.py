@@ -3,17 +3,13 @@ Simulate tumor growth under different spatial models. Inspired by Noble et al, 2
 """
 from .cell import TumorCell
 from .modes import *
-from .util import *
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 import click
 import os
-
-from pymuller import muller
-
+from pathlib import Path
 
 MODE_LIST = [
 	simulate_nonspatial,
@@ -23,7 +19,12 @@ MODE_LIST = [
 ]
 
 @click.command(help="Simulate tumor evolution under different spatial constraints.")
-@click.option("-m", "--mode", default=0, help="Spatial structure.")
+@click.option(
+    "-m", 
+    "--mode", 
+    default=0, 
+    help="Spatial structure."
+)
 @click.option(
     "-k",
     "--carrying-capacity",
@@ -43,41 +44,31 @@ MODE_LIST = [
     help="Number of steps in simulation.",
 )
 @click.option(
-   "-r",
-   "--grid-side",
-   default=10,
-   help="Number of units in grid side.",
+   "-d",
+   "--division-rate",
+   default=0.1,
+   help="Divison rate."
 )
 @click.option(
    "-o",
    "--output-path",
-   default="./",
-   help="Output path."
+   default="./out",
+   help="Output directory"
 )
-@click.option(
-   "--plot",
-   is_flag=True,
-   default=False,
-   help="Show the results in a figure."
-)
-def main(mode, carrying_capacity, genes, steps, grid_side, output_path, plot):
-	tumor_cell = TumorCell(n_genes=genes)
+def main(mode, carrying_capacity, genes, steps, division_rate, output_path):
+	tumor_cell = TumorCell(n_genes=genes, division_rate=division_rate)
 	env, traces = MODE_LIST[mode](steps, tumor_cell)
-	print(env.get_genotype_frequencies())
-	print(len(env.cells))
-	#print(env.get_diversity())
+	genotypes, _ = env.get_genotype_frequencies()
+	parents = env.genotypes_parents
 
-	populations_df, adjacency_df, color_by = prepare_muller([t['genotypes_counts'] for t in traces], [t['genotypes_parents'] for t in traces])
-	
-	adjacency_df.to_csv(os.path.join(output_path, 'adjacency.csv'))
-	
-	#env.save_grid(os.path.join(output_path, f'mode_{mode}_grid.txt'))
-	#env.save_event_tree(os.path.join(output_path, f'mode_{mode}_tree.txt'))
-	if plot:
-		ax = muller(populations_df, adjacency_df, color_by, colorbar=False)
-		plt.show()
-		#env.plot_grid(os.path.join(output_path, f'mode_{mode}_grid.png'))
-		#env.plot_tree(os.path.join(output_path, f'mode_{mode}_tree.png'))	
+	print(f"Simulation in mode {mode} finished.")
 
+	Path(output_path).mkdir(parents=True, exist_ok=True)
+	pd.DataFrame([t['genotypes_counts'] for t in traces]).fillna(0).to_csv(os.path.join(output_path, 'trace_counts.csv'))
+	pd.DataFrame([parents]).to_csv(os.path.join(output_path, 'parents.csv'))
+	pd.DataFrame(genotypes).to_csv(os.path.join(output_path, 'genotypes.csv'))
+
+	print(f"Saved results to {output_path}.")
+	
 if __name__ == '__main__':
 	main()

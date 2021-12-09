@@ -7,6 +7,7 @@ class Deme(object):
 		self.initial_death_rate = cell.division_rate * death_rate
 		self.maximum_death_rate = min(cell.max_birth_rate * 10, .2)
 		self.death_rate = self.initial_death_rate
+		self.init_cell = cell
 		self.cells = set()
 		self.cells.add(cell)
 		self.genotypes_counts = dict()
@@ -34,10 +35,14 @@ class Deme(object):
 					new_cell.set_params()
 					if cell.type == 'tumor':
 						mutate = np.random.binomial(1, self.mutation_rate)
+
 						if mutate:
 							new_cell.mutate()
+							new_cell.genotype_id = str(i) + str(new_cell.genotype_id)
 							self.genotypes_counts[new_cell.genotype_id] = 1
 							self.genotypes_parents[new_cell.genotype_id] = new_cell.parent.genotype_id
+							if self.genotypes_parents[new_cell.genotype_id] == new_cell.genotype_id:
+								raise Exception(f"Oh no! genotype is its own parent?!: {new_cell.genotype_id}")
 						else:
 							self.genotypes_counts[new_cell.genotype_id] += 1
 					self.cells.add(new_cell)
@@ -56,7 +61,7 @@ class Deme(object):
 		genotypes = np.vstack([cell.snvs for cell in self.cells])
 		unique, counts = np.unique(genotypes, return_counts=True, axis=0)
 		freqs = counts / np.sum(counts)
-		return freqs
+		return genotypes, freqs
 	
 	def get_diversity(self):
 		# Get Simpson index

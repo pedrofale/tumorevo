@@ -8,17 +8,18 @@ class Cell(object):
 		self.n_genes = n_genes
 		if parent is None:
 			self.snvs = np.zeros((n_genes,)) # 0 is no mutation
+			self.set_genotype_id()
 		else:
 			self.snvs = np.array(parent.snvs)
+			self.genotype_id = self.parent.genotype_id
 		self.exp = np.zeros((n_genes,)) # Over/under expressed level
 
 		self.division_rate = division_rate
 		self.max_birth_rate = max_birth_rate
 		self.death_rate = death_rate
-		self.set_genotype_id()
 	
 	def set_genotype_id(self):
-		self.genotype_id = int(str(1)+''.join(self.snvs.astype(int).astype(str)))
+		self.genotype_id = ''.join(self.snvs.astype(int).astype(str))
 
 	def divide(self, new_cell_id=0):
 		new_cell = deepcopy(self)
@@ -48,6 +49,7 @@ class TumorCell(Cell):
 	def mutate(self, n_events=1):
 		mutated_genes = np.random.choice(self.n_genes, p=self.snv_probs/np.sum(self.snv_probs), replace=False, size=n_events)
 		self.snvs[mutated_genes] = 1
+		self.snv_probs[np.where(self.snvs != 0)] = 0.
 		# Apply driver effects
 		for gene in mutated_genes:
 			self.division_rate += self.division_rate * self.driver_effects

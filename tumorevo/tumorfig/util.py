@@ -39,6 +39,8 @@ def plot_deme(
     average_radius=10,
     colormap="gnuplot",
     ax=None,
+    dpi=200,
+    figsize=(10,10)
 ):
     """Create a circle for each cell and color it by genotype.
     The colors are consistent with the Muller plots.
@@ -76,7 +78,7 @@ def plot_deme(
     circles = pc.pack(radii)
 
     if ax is None:
-        fig, ax = plt.subplots(figsize=(5, 5))
+        fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     else:
         plt.sca(ax)
     for i, (x, y, radius) in enumerate(circles):

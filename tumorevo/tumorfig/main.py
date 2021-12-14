@@ -30,6 +30,7 @@ from pymuller import muller
     help="Average radius of circles in slice plot.",
 )
 @click.option("-m", "--colormap", default="gnuplot", help="Colormap for genotypes.")
+@click.option("--dpi", default=100, help="DPI for figures.")
 @click.option("--plot", is_flag=True, help="Plot all the figures.")
 @click.option("--do-muller", is_flag=True, help="Make a Muller plot.")
 @click.option("--do-slice", is_flag=True, help="Make a slice plot.")
@@ -50,6 +51,7 @@ def main(
     cells,
     average_radius,
     colormap,
+    dpi,
     plot,
     do_muller,
     do_slice,
@@ -65,7 +67,7 @@ def main(
     pop_df, anc_df, color_by = prepare_plots(genotype_counts, genotype_parents)
 
     if plot:
-        fig, ax_list = plt.subplots(ncols=3, sharex=False)
+        fig, ax_list = plt.subplots(ncols=3, sharex=Falsei, dpi=dpi)
         muller(
             pop_df,
             anc_df,
@@ -108,7 +110,7 @@ def main(
                 colormap=colormap,
                 normalize=normalize,
             )
-            plt.savefig(os.path.join(output_path, "muller.png"), bbox_inches="tight")
+            plt.savefig(os.path.join(output_path, "muller.pdf"), dpi=dpi, bbox_inches="tight")
 
         if do_slice:
             ax = plot_deme(
@@ -120,7 +122,7 @@ def main(
                 average_radius=average_radius,
                 colormap=colormap,
             )
-            plt.savefig(os.path.join(output_path, "slice.png"), bbox_inches="tight")
+            plt.savefig(os.path.join(output_path, "slice.pdf"), dpi=dpi, bbox_inches="tight")
 
         if do_tree:
             ax = plot_tree(
@@ -133,7 +135,7 @@ def main(
                 labels=labels,
                 colormap=colormap,
             )
-            plt.savefig(os.path.join(output_path, "tree.png"), bbox_inches="tight")
+            plt.savefig(os.path.join(output_path, "tree.pdf"), dpi=dpi, bbox_inches="tight")
 
 
 if __name__ == "__main__":

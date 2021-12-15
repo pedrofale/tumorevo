@@ -7,8 +7,11 @@ from copy import deepcopy
 
 
 def simulate_nonspatial(n_steps, cell, **kwargs):
+    # Prevent cell from migrating
+    cell.dispersal_rate = 0
+
     # Create Deme
-    deme = Deme(cell, **kwargs)
+    deme = Tumor(cell, **kwargs)
 
     traces = []
     traces.append(dict(genotypes_counts=deepcopy(deme.genotypes_counts)))
@@ -21,8 +24,19 @@ def simulate_nonspatial(n_steps, cell, **kwargs):
     return deme, traces
 
 
-def simulate_invasion():
-    raise NotImplementedError
+def simulate_invasion(n_steps, cell, **kwargs):
+    # Initialise tumor with single cell 
+    tumor = Tumor(cell, **kwargs)
+
+    traces = []
+    traces.append(dict(genotypes_counts=deepcopy(tumor.genotypes_counts)))
+    # Simulate tumor growth
+    for step in tqdm(range(n_steps - 1)):
+        tumor.update()
+        traces.append(dict(genotypes_counts=deepcopy(tumor.genotypes_counts)))
+
+    # Return tumor
+    return tumor, traces
 
 
 def simulate_fission():

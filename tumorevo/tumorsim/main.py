@@ -39,7 +39,9 @@ MODE_LIST = [
     default=1000,
     help="Number of steps in simulation.",
 )
-@click.option("-d", "--division-rate", default=0.1, help="Divison rate.")
+@click.option("--grid-size", default=50, help="Grid size.")
+@click.option("--division-rate", default=0.1, help="Divison rate.")
+@click.option("--dispersal-rate", default=0.1, help="Dispersal rate.")
 @click.option(
     "-r",
     "--random_seed",
@@ -48,11 +50,11 @@ MODE_LIST = [
 )
 @click.option("-o", "--output-path", default="./out", help="Output directory")
 def main(
-    mode, carrying_capacity, genes, steps, division_rate, random_seed, output_path
+    mode, carrying_capacity, genes, steps, grid_size, division_rate, dispersal_rate, random_seed, output_path
 ):
     np.random.seed(random_seed)
-    tumor_cell = TumorCell(n_genes=genes, division_rate=division_rate)
-    env, traces = MODE_LIST[mode](steps, tumor_cell)
+    tumor_cell = TumorCell(n_genes=genes, division_rate=division_rate, dispersal_rate=dispersal_rate)
+    env, traces = MODE_LIST[mode](steps, tumor_cell, grid_size=grid_size)
     genotypes, _ = env.get_genotype_frequencies()
     parents = env.genotypes_parents
 
@@ -64,6 +66,10 @@ def main(
     )
     pd.DataFrame([parents]).to_csv(os.path.join(output_path, "parents.csv"))
     pd.DataFrame(genotypes).to_csv(os.path.join(output_path, "genotypes.csv"))
+
+    if mode > 0:
+        genotype_matrix = env.get_genotype_matrix()
+        pd.DataFrame(genotype_matrix).to_csv(os.path.join(output_path, "grid.csv"))
 
     print(f"Saved results to {output_path}.")
 

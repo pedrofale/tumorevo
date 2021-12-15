@@ -10,6 +10,7 @@ class Cell(object):
         division_rate=0.1,
         death_rate=0.1,
         max_birth_rate=0.3,
+        dispersal_rate=0.1,
     ):
         self.type = "healthy"
         self.parent = parent
@@ -25,6 +26,7 @@ class Cell(object):
         self.division_rate = division_rate
         self.max_birth_rate = max_birth_rate
         self.death_rate = death_rate
+        self.dispersal_rate = dispersal_rate
 
     def set_genotype_id(self):
         self.genotype_id = "".join(self.snvs.astype(int).astype(str))
@@ -67,8 +69,7 @@ class TumorCell(Cell):
         # Apply driver effects
         for gene in mutated_genes:
             self.division_rate += self.division_rate * self.driver_effects
+            
         self.division_rate = min(self.max_birth_rate, self.division_rate)
         self.set_genotype_id()
 
-    def update_division_rate(self):
-        self.division_rate = self.division_rate * (1 + self.driver_effects)

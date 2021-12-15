@@ -67,7 +67,7 @@ def main(
     pop_df, anc_df, color_by = prepare_plots(genotype_counts, genotype_parents)
 
     if plot:
-        fig, ax_list = plt.subplots(ncols=3, sharex=Falsei, dpi=dpi)
+        fig, ax_list = plt.subplots(ncols=3, sharex=False, dpi=dpi)
         muller(
             pop_df,
             anc_df,

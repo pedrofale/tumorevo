@@ -1,20 +1,34 @@
 import numpy as np
 
+from collections import Counter
 
 class Deme(object):
-    def __init__(self, cell, carrying_capacity=1, mutation_rate=0.05, death_rate=0.98):
+    def __init__(self, cell=None, carrying_capacity=1, division_rate=0.1, max_birth_rate=0.5,  mutation_rate=0.05, death_rate=0.98, tumor=None, x=None, y=None):
+        if cell is None and tumor is None:
+            raise ValueError("Must initialise Deme with either a Cell or a Tumor object.")
         self.carrying_capacity = carrying_capacity
+        self.division_rate = division_rate
         self.mutation_rate = mutation_rate
-        self.initial_death_rate = cell.division_rate * death_rate
+        self.initial_death_rate = division_rate * death_rate
+        self.death_rate = self.initial_death_rate
+        self.maximum_death_rate = min(max_birth_rate * 10, 0.2)
+        self.tumor = tumor
+        self.x = x
+        self.y = y
+        self.genotypes_counts = Counter()
+        self.genotypes_parents = dict()
+        self.cells = set()
+
+        if cell is not None:
+            self.add_cell(cell)
+
+    def add_cell(self, cell):
+        cell.genotype_id = str(0) + str(cell.genotype_id)
+        self.cells.add(cell)
+        self.genotypes_counts[cell.genotype_id] = 1
+        self.initial_death_rate = cell.division_rate * self.death_rate
         self.maximum_death_rate = min(cell.max_birth_rate * 10, 0.2)
         self.death_rate = self.initial_death_rate
-        self.init_cell = cell
-        self.init_cell.genotype_id = str(0) + str(cell.genotype_id)
-        self.cells = set()
-        self.cells.add(self.init_cell)
-        self.genotypes_counts = dict()
-        self.genotypes_counts[cell.genotype_id] = 1
-        self.genotypes_parents = dict()
 
     def update(self):
         # Choose subset of cells randomly
@@ -55,8 +69,18 @@ class Deme(object):
                                     f"Oh no! genotype is its own parent?!: {new_cell.genotype_id}"
                                 )
                         else:
-                            self.genotypes_counts[new_cell.genotype_id] += 1
-                    self.cells.add(new_cell)
+                            disperse = np.random.binomial(1, new_cell.dispersal_rate)
+                            if disperse:
+                                possible_demes = self.tumor.get_neighboring_demes(self)
+                                target_deme = np.random.choice(possible_demes)
+                                target_deme.cells.add(new_cell)
+                                if new_cell.genotype_id in target_deme.genotypes_counts:
+                                    target_deme.genotypes_counts[new_cell.genotype_id] += 1
+                                else:
+                                    target_deme.genotypes_counts[new_cell.genotype_id] = 1
+                            else:
+                                self.genotypes_counts[new_cell.genotype_id] += 1
+                                self.cells.add(new_cell)
 
         # Update death rate
         self.update_death_rate()
@@ -73,6 +97,9 @@ class Deme(object):
         unique, counts = np.unique(genotypes, return_counts=True, axis=0)
         freqs = counts / np.sum(counts)
         return genotypes, freqs
+
+    def get_most_frequent_genotype(self):
+        return self.genotypes_counts.most_common(1)[0][0]
 
     def get_diversity(self):
         # Get Simpson index

@@ -3,8 +3,8 @@
 [![PyPI](https://img.shields.io/pypi/v/tumorevo.svg?style=flat)](https://pypi.python.org/pypi/tumorevo)
 [![Tests](https://github.com/pedrofale/tumorevo/actions/workflows/main.yaml/badge.svg)](https://github.com/pedrofale/tumorevo/actions/workflows/main.yaml)
 
-Simulate tumor evolution under different spatial constraints according to Noble et al (2019).
-`tumorevo` produces a cartoon of the 2D spatial organization of the tumor cells, a clone tree and a Muller plot.
+Simulate tumor evolution under different spatial constraints. This package aims to be as awesome as [demon](https://github.com/robjohnnoble/demon_model).
+`tumorevo` simulates tumor growth and and produces a Muller plot, a cartoon of the 2D spatial organization of the tumor cells, and a clone tree.
 
 ## Installation
 
@@ -19,7 +19,8 @@ $ pip install tumorevo
 ### Simulating tumor evolution
 `tumorsim` can be used to simulate the evolution of a tumor according to a specified spatial structure.
 ```bash
-$ tumorsim --n_cells 2000 --n_genes 1000 --mode 0
+$ tumorsim --mode 1 --steps 2000 --genes 20 --carrying-capacity 5 --grid-size 20 --division-rate 0.2 --dispersal-rate 0.1
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1999/1999 [00:07<00:00, 251.69it/s]
 ```
 
 This will create a folder containing:
@@ -40,9 +41,14 @@ Options:
                                   Deme carrying capacity.
   -g, --genes INTEGER             Number of genes.
   -s, --steps INTEGER             Number of steps in simulation.
-  -d, --division-rate FLOAT       Divison rate.
+  --grid-size INTEGER             Grid size.
+  --division-rate FLOAT           Divison rate.
+  --mutation-rate FLOAT           Mutation rate.
+  --dispersal-rate FLOAT          Dispersal rate.
   -r, --random_seed INTEGER       Random seed for the pseudo random number
                                   generator.
+  --log INTEGER                   Logging level. 0 for no logging, 1 for info,
+                                  2 for debug.
   -o, --output-path TEXT          Output directory
   --help                          Show this message and exit.
 ```
@@ -50,7 +56,7 @@ Options:
 ### Plotting tumor evolution
 `tumorfig` can be used to create a Muller plot of the tumor's evolution, the 2D spatial organization of the tumor cells, and a clone tree.
 ```bash
-$ tumorfig trace_counts.csv parents.csv
+$ tumorfig out/trace_counts.csv out/parents.csv --plot --grid-file out/grid.csv --normalize --remove
 ```
 
 Full overview:
@@ -63,7 +69,9 @@ Usage: tumorfig [OPTIONS] GENOTYPE_COUNTS GENOTYPE_PARENTS
 Options:
   -c, --cells INTEGER           Number of cells in slice plot.
   -r, --average-radius INTEGER  Average radius of circles in slice plot.
-  -m, --colormap TEXT           Colormap for genotypes.
+  --grid-file TEXT              Path to grid file.
+  --colormap TEXT               Colormap for genotypes.
+  --dpi INTEGER                 DPI for figures.
   --plot                        Plot all the figures.
   --do-muller                   Make a Muller plot.
   --do-slice                    Make a slice plot.

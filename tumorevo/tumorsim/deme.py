@@ -1,6 +1,7 @@
 import numpy as np
 
 from collections import Counter
+import logging
 
 class Deme(object):
     def __init__(self, cell=None, carrying_capacity=1, division_rate=0.1, max_birth_rate=0.5,  mutation_rate=0.05, death_rate=0.98, tumor=None, x=None, y=None):
@@ -68,6 +69,7 @@ class Deme(object):
                                 raise Exception(
                                     f"Oh no! genotype is its own parent?!: {new_cell.genotype_id}"
                                 )
+                            self.cells.add(new_cell)
                         else:
                             disperse = np.random.binomial(1, new_cell.dispersal_rate)
                             if disperse:

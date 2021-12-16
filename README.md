@@ -6,10 +6,6 @@
 Simulate tumor evolution under different spatial constraints. This package aims to be as awesome as [demon](https://github.com/robjohnnoble/demon_model).
 `tumorevo` simulates tumor growth and and produces a Muller plot, a cartoon of the 2D spatial organization of the tumor cells, and a clone tree.
 
-<div align="center">
-  <img src="https://github.com/pedrofale/tumorevo/raw/main/figures/example.png", width="700px">
-</div>
-
 ## Installation
 
 ```bash
@@ -63,6 +59,11 @@ Options:
 ```bash
 $ tumorfig out/trace_counts.csv out/parents.csv --plot --grid-file out/grid.csv --normalize --remove
 ```
+
+This will open a figure like this:
+<div align="center">
+  <img src="https://github.com/pedrofale/tumorevo/raw/main/figures/example.png", width="700px">
+</div>
 
 Full overview:
 ```

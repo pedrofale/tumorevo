@@ -68,7 +68,8 @@ class TumorCell(Cell):
         self.snv_probs[np.where(self.snvs != 0)] = 0.0
         # Apply driver effects
         for gene in mutated_genes:
-            self.division_rate += self.division_rate * self.driver_effects
+            if self.is_driver[gene]:
+                self.division_rate += self.division_rate * self.driver_effects
 
         self.division_rate = min(self.max_birth_rate, self.division_rate)
         self.set_genotype_id()

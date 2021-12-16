@@ -25,7 +25,7 @@ def simulate_nonspatial(n_steps, cell, **kwargs):
 
 
 def simulate_invasion(n_steps, cell, **kwargs):
-    # Initialise tumor with single cell 
+    # Initialise tumor with single cell
     tumor = Tumor(cell, **kwargs)
 
     traces = []

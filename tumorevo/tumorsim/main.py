@@ -49,10 +49,21 @@ MODE_LIST = [
     default=42,
     help="Random seed for the pseudo random number generator.",
 )
-@click.option("--log", default=0, help="Logging level. 0 for no logging, 1 for info, 2 for debug.")
+@click.option(
+    "--log", default=0, help="Logging level. 0 for no logging, 1 for info, 2 for debug."
+)
 @click.option("-o", "--output-path", default="./out", help="Output directory")
 def main(
-    mode, carrying_capacity, genes, steps, grid_size, division_rate, dispersal_rate, random_seed, log, output_path
+    mode,
+    carrying_capacity,
+    genes,
+    steps,
+    grid_size,
+    division_rate,
+    dispersal_rate,
+    random_seed,
+    log,
+    output_path,
 ):
     if log == 0:
         log = logging.CRITICAL
@@ -61,9 +72,11 @@ def main(
     elif log == 2:
         log == logging.DEBUG
     logging.basicConfig(level=log)
-    
+
     np.random.seed(random_seed)
-    tumor_cell = TumorCell(n_genes=genes, division_rate=division_rate, dispersal_rate=dispersal_rate)
+    tumor_cell = TumorCell(
+        n_genes=genes, division_rate=division_rate, dispersal_rate=dispersal_rate
+    )
     env, traces = MODE_LIST[mode](steps, tumor_cell, grid_size=grid_size)
     genotypes, _ = env.get_genotype_frequencies()
     parents = env.genotypes_parents

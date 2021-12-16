@@ -5,6 +5,7 @@ import numpy as np
 from collections import Counter
 import logging
 
+
 class Tumor(object):
     def __init__(self, cell, grid_size=10, carrying_capacity=1, seed=42):
         self.grid_size = grid_size
@@ -18,14 +19,20 @@ class Tumor(object):
         for x in range(self.grid_size):
             row = []
             for y in range(self.grid_size):
-                deme = Deme(tumor=self, x=x, y=y, division_rate=cell.division_rate,
-                            max_birth_rate=cell.max_birth_rate, carrying_capacity=self.carrying_capacity)
+                deme = Deme(
+                    tumor=self,
+                    x=x,
+                    y=y,
+                    division_rate=cell.division_rate,
+                    max_birth_rate=cell.max_birth_rate,
+                    carrying_capacity=self.carrying_capacity,
+                )
                 self.deme_list.append(deme)
                 row.append(deme)
             self.grid.append(row)
 
         # Put tumor cell in center deme
-        center = int(self.grid_size/2)
+        center = int(self.grid_size / 2)
         self.grid[center][center].add_cell(cell)
         self.genotypes_parents = dict()
         self.genotypes_counts = Counter()
@@ -70,7 +77,7 @@ class Tumor(object):
 
         possible_demes = []
         pos = []
-        for tup in[(x-1, y), (x, y+1), (x+1, y), (x, y-1)]:
+        for tup in [(x - 1, y), (x, y + 1), (x + 1, y), (x, y - 1)]:
             if tup[0] > 0 and tup[0] < self.grid_size:
                 if tup[1] > 0 and tup[1] < self.grid_size:
                     pos.append(tup)
@@ -80,9 +87,7 @@ class Tumor(object):
 
     def update(self):
         deme_list = [deme for deme in self.deme_list if len(deme.cells) > 0]
-        demes = np.random.choice(
-            deme_list, size=min(10, len(deme_list)), replace=False
-        )
+        demes = np.random.choice(deme_list, size=min(10, len(deme_list)), replace=False)
         for deme in demes:
             deme.update()
 

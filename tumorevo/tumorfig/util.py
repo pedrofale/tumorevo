@@ -40,7 +40,7 @@ def plot_deme(
     colormap="gnuplot",
     ax=None,
     dpi=200,
-    figsize=(10,10)
+    figsize=(10, 10),
 ):
     """Create a circle for each cell and color it by genotype.
     The colors are consistent with the Muller plots.

@@ -3,10 +3,24 @@ import numpy as np
 from collections import Counter
 import logging
 
+
 class Deme(object):
-    def __init__(self, cell=None, carrying_capacity=1, division_rate=0.1, max_birth_rate=0.5,  mutation_rate=0.05, death_rate=0.98, tumor=None, x=None, y=None):
+    def __init__(
+        self,
+        cell=None,
+        carrying_capacity=1,
+        division_rate=0.1,
+        max_birth_rate=0.5,
+        mutation_rate=0.05,
+        death_rate=0.98,
+        tumor=None,
+        x=None,
+        y=None,
+    ):
         if cell is None and tumor is None:
-            raise ValueError("Must initialise Deme with either a Cell or a Tumor object.")
+            raise ValueError(
+                "Must initialise Deme with either a Cell or a Tumor object."
+            )
         self.carrying_capacity = carrying_capacity
         self.division_rate = division_rate
         self.mutation_rate = mutation_rate
@@ -77,9 +91,13 @@ class Deme(object):
                                 target_deme = np.random.choice(possible_demes)
                                 target_deme.cells.add(new_cell)
                                 if new_cell.genotype_id in target_deme.genotypes_counts:
-                                    target_deme.genotypes_counts[new_cell.genotype_id] += 1
+                                    target_deme.genotypes_counts[
+                                        new_cell.genotype_id
+                                    ] += 1
                                 else:
-                                    target_deme.genotypes_counts[new_cell.genotype_id] = 1
+                                    target_deme.genotypes_counts[
+                                        new_cell.genotype_id
+                                    ] = 1
                             else:
                                 self.genotypes_counts[new_cell.genotype_id] += 1
                                 self.cells.add(new_cell)

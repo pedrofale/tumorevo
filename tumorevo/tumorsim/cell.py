@@ -69,7 +69,6 @@ class TumorCell(Cell):
         # Apply driver effects
         for gene in mutated_genes:
             self.division_rate += self.division_rate * self.driver_effects
-            
+
         self.division_rate = min(self.max_birth_rate, self.division_rate)
         self.set_genotype_id()
-

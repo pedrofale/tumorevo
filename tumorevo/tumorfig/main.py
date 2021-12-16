@@ -110,7 +110,9 @@ def main(
                 colormap=colormap,
                 normalize=normalize,
             )
-            plt.savefig(os.path.join(output_path, "muller.pdf"), dpi=dpi, bbox_inches="tight")
+            plt.savefig(
+                os.path.join(output_path, "muller.pdf"), dpi=dpi, bbox_inches="tight"
+            )
 
         if do_slice:
             ax = plot_deme(
@@ -122,7 +124,9 @@ def main(
                 average_radius=average_radius,
                 colormap=colormap,
             )
-            plt.savefig(os.path.join(output_path, "slice.pdf"), dpi=dpi, bbox_inches="tight")
+            plt.savefig(
+                os.path.join(output_path, "slice.pdf"), dpi=dpi, bbox_inches="tight"
+            )
 
         if do_tree:
             ax = plot_tree(
@@ -135,7 +139,9 @@ def main(
                 labels=labels,
                 colormap=colormap,
             )
-            plt.savefig(os.path.join(output_path, "tree.pdf"), dpi=dpi, bbox_inches="tight")
+            plt.savefig(
+                os.path.join(output_path, "tree.pdf"), dpi=dpi, bbox_inches="tight"
+            )
 
 
 if __name__ == "__main__":

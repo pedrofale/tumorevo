@@ -72,7 +72,7 @@ def main(
     cmap, genotypes = get_colormap(pop_df, anc_df, color_by, colormap)
 
     if plot:
-        fig, ax_list = plt.subplots(ncols=3, sharex=False, dpi=dpi, figsize=(8,2))
+        fig, ax_list = plt.subplots(ncols=3, sharex=False, dpi=dpi, figsize=(8, 2))
         muller(
             pop_df,
             anc_df,
@@ -83,8 +83,8 @@ def main(
             normalize=normalize,
             background_strain=False,
         )
-        plt.axis('off')
-        
+        plt.axis("off")
+
         if grid_file == "":
             plot_deme(
                 cells,
@@ -122,7 +122,7 @@ def main(
                 colormap=colormap,
                 normalize=normalize,
             )
-            plt.axis('off')
+            plt.axis("off")
             plt.savefig(
                 os.path.join(output_path, "muller.pdf"), dpi=dpi, bbox_inches="tight"
             )

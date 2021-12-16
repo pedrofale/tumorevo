@@ -73,7 +73,7 @@ class Deme(object):
 
                         if mutate:
                             new_cell.mutate()
-                            new_cell.genotype_id = str(i) + str(new_cell.genotype_id)
+                            new_cell.genotype_id = str(i) + str(new_cell.genotype_id) # TODO: Maybe not a great idea to depend on number of cells
                             self.genotypes_counts[new_cell.genotype_id] = 1
                             self.genotypes_parents[
                                 new_cell.genotype_id

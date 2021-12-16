@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.cm import get_cmap
+from ast import literal_eval
 
 import pymuller
 import packcircles as pc
@@ -29,6 +30,20 @@ def prepare_plots(genotype_counts, genotype_parents):
 
     return pop_df, anc_df, color_by
 
+def get_colormap(populations_df, adjacency_df, color_by, colormap):
+    x = populations_df["Generation"].unique()
+    y_table = pymuller.logic._get_y_values(populations_df, adjacency_df, 10)
+    final_order = y_table.columns.values
+    Y = y_table.to_numpy().T
+    cmap = plt.get_cmap(colormap)
+    color_by = color_by.copy()
+    ordered_colors = color_by.loc[final_order]
+    norm = matplotlib.colors.Normalize(
+        vmin=np.min(ordered_colors), vmax=np.max(ordered_colors)
+    )
+    color_map = cmap(norm(ordered_colors.values))
+    #color_map[0] = color_map[-1] = [1, 1, 1, 1]
+    return color_map, final_order
 
 def plot_deme(
     n_cells,
@@ -85,6 +100,27 @@ def plot_deme(
         patch = plt.Circle((x, y), radius, color=colors[i], alpha=0.65)
         ax.add_patch(patch)
     ax.set(xlim=(-150, 140), ylim=(-180, 170))
+    plt.axis("off")
+
+
+def plot_grid(
+    genotype_grid, 
+    colormap,
+    genotypes,
+    ax=None,
+    figsize=(10,10),
+    dpi=100,
+):
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    else:
+        plt.sca(ax)
+    # Turn the genotype grid into grid of colors
+    color_grid = np.zeros((genotype_grid.shape[0], genotype_grid.shape[1], 4))
+    for i, genotype in enumerate(genotypes):
+        idx = np.where(genotype_grid == genotype)
+        color_grid[idx] = colormap[i]
+    ax.imshow(color_grid)
     plt.axis("off")
 
 

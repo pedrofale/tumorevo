@@ -29,7 +29,8 @@ from pymuller import muller
     default=10,
     help="Average radius of circles in slice plot.",
 )
-@click.option("-m", "--colormap", default="gnuplot", help="Colormap for genotypes.")
+@click.option("--grid-file", default="", help="Path to grid file.")
+@click.option("--colormap", default="gnuplot", help="Colormap for genotypes.")
 @click.option("--dpi", default=100, help="DPI for figures.")
 @click.option("--plot", is_flag=True, help="Plot all the figures.")
 @click.option("--do-muller", is_flag=True, help="Make a Muller plot.")
@@ -50,6 +51,7 @@ def main(
     genotype_parents,
     cells,
     average_radius,
+    grid_file,
     colormap,
     dpi,
     plot,
@@ -63,9 +65,12 @@ def main(
 ):
     genotype_counts = pd.read_csv(genotype_counts, index_col=0)
     genotype_parents = pd.read_csv(genotype_parents, index_col=0, dtype=str)
+    if grid_file != "":
+        grid = pd.read_csv(grid_file, index_col=0, dtype=str)
 
     pop_df, anc_df, color_by = prepare_plots(genotype_counts, genotype_parents)
-
+    cmap, genotypes = get_colormap(pop_df, anc_df, color_by, colormap)
+    
     if plot:
         fig, ax_list = plt.subplots(ncols=3, sharex=False, dpi=dpi)
         muller(
@@ -76,17 +81,22 @@ def main(
             colorbar=False,
             colormap=colormap,
             normalize=normalize,
+            background_strain=False,
         )
-        plot_deme(
-            cells,
-            genotype_counts.iloc[-1],
-            pop_df,
-            anc_df,
-            color_by,
-            average_radius=average_radius,
-            colormap=colormap,
-            ax=ax_list[1],
-        )
+        if grid_file == "":
+            plot_deme(
+                cells,
+                genotype_counts.iloc[-1],
+                pop_df,
+                anc_df,
+                color_by,
+                average_radius=average_radius,
+                colormap=colormap,
+                ax=ax_list[1],
+            )
+        else:
+            plot_grid(grid, cmap, genotypes, ax=ax_list[1])
+
         plot_tree(
             genotype_parents,
             pop_df,
@@ -115,15 +125,18 @@ def main(
             )
 
         if do_slice:
-            ax = plot_deme(
-                cells,
-                genotype_counts.iloc[-1],
-                pop_df,
-                anc_df,
-                color_by,
-                average_radius=average_radius,
-                colormap=colormap,
-            )
+            if grid_file == "":
+                ax = plot_deme(
+                    cells,
+                    genotype_counts.iloc[-1],
+                    pop_df,
+                    anc_df,
+                    color_by,
+                    average_radius=average_radius,
+                    colormap=colormap,
+                )
+            else:
+                ax = plot_grid(grid, cmap) 
             plt.savefig(
                 os.path.join(output_path, "slice.pdf"), dpi=dpi, bbox_inches="tight"
             )

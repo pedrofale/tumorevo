@@ -30,6 +30,7 @@ def prepare_plots(genotype_counts, genotype_parents):
 
     return pop_df, anc_df, color_by
 
+
 def get_colormap(populations_df, adjacency_df, color_by, colormap):
     x = populations_df["Generation"].unique()
     y_table = pymuller.logic._get_y_values(populations_df, adjacency_df, 10)
@@ -42,8 +43,9 @@ def get_colormap(populations_df, adjacency_df, color_by, colormap):
         vmin=np.min(ordered_colors), vmax=np.max(ordered_colors)
     )
     color_map = cmap(norm(ordered_colors.values))
-    #color_map[0] = color_map[-1] = [1, 1, 1, 1]
+    # color_map[0] = color_map[-1] = [1, 1, 1, 1]
     return color_map, final_order
+
 
 def plot_deme(
     n_cells,
@@ -104,11 +106,11 @@ def plot_deme(
 
 
 def plot_grid(
-    genotype_grid, 
+    genotype_grid,
     colormap,
     genotypes,
     ax=None,
-    figsize=(10,10),
+    figsize=(10, 10),
     dpi=100,
 ):
     if ax is None:

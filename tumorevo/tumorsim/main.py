@@ -77,10 +77,16 @@ def main(
 
     np.random.seed(random_seed)
     tumor_cell = TumorCell(
-        n_genes=genes, division_rate=division_rate, 
+        n_genes=genes,
+        division_rate=division_rate,
     )
-    env, traces = MODE_LIST[mode](steps, tumor_cell, grid_size=grid_size,
-            mutation_rate=mutation_rate, dispersal_rate=dispersal_rate)
+    env, traces = MODE_LIST[mode](
+        steps,
+        tumor_cell,
+        grid_size=grid_size,
+        mutation_rate=mutation_rate,
+        dispersal_rate=dispersal_rate,
+    )
     genotypes, _ = env.get_genotype_frequencies()
     parents = env.genotypes_parents
 

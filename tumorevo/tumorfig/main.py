@@ -70,7 +70,7 @@ def main(
 
     pop_df, anc_df, color_by = prepare_plots(genotype_counts, genotype_parents)
     cmap, genotypes = get_colormap(pop_df, anc_df, color_by, colormap)
-    
+
     if plot:
         fig, ax_list = plt.subplots(ncols=3, sharex=False, dpi=dpi)
         muller(
@@ -136,7 +136,7 @@ def main(
                     colormap=colormap,
                 )
             else:
-                ax = plot_grid(grid, cmap) 
+                ax = plot_grid(grid, cmap)
             plt.savefig(
                 os.path.join(output_path, "slice.pdf"), dpi=dpi, bbox_inches="tight"
             )

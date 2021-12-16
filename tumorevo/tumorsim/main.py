@@ -42,7 +42,8 @@ MODE_LIST = [
 )
 @click.option("--grid-size", default=50, help="Grid size.")
 @click.option("--division-rate", default=0.1, help="Divison rate.")
-@click.option("--dispersal-rate", default=0.1, help="Dispersal rate.")
+@click.option("--mutation-rate", default=0.01, help="Mutation rate.")
+@click.option("--dispersal-rate", default=0.05, help="Dispersal rate.")
 @click.option(
     "-r",
     "--random_seed",
@@ -60,6 +61,7 @@ def main(
     steps,
     grid_size,
     division_rate,
+    mutation_rate,
     dispersal_rate,
     random_seed,
     log,
@@ -75,9 +77,10 @@ def main(
 
     np.random.seed(random_seed)
     tumor_cell = TumorCell(
-        n_genes=genes, division_rate=division_rate, dispersal_rate=dispersal_rate
+        n_genes=genes, division_rate=division_rate, 
     )
-    env, traces = MODE_LIST[mode](steps, tumor_cell, grid_size=grid_size)
+    env, traces = MODE_LIST[mode](steps, tumor_cell, grid_size=grid_size,
+            mutation_rate=mutation_rate, dispersal_rate=dispersal_rate)
     genotypes, _ = env.get_genotype_frequencies()
     parents = env.genotypes_parents
 

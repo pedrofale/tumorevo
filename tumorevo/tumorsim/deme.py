@@ -12,6 +12,7 @@ class Deme(object):
         division_rate=0.1,
         max_birth_rate=0.5,
         mutation_rate=0.05,
+        dispersal_rate=0.01,
         death_rate=0.98,
         tumor=None,
         x=None,
@@ -24,6 +25,7 @@ class Deme(object):
         self.carrying_capacity = carrying_capacity
         self.division_rate = division_rate
         self.mutation_rate = mutation_rate
+        self.dispersal_rate = dispersal_rate
         self.initial_death_rate = division_rate * death_rate
         self.death_rate = self.initial_death_rate
         self.maximum_death_rate = min(max_birth_rate * 10, 0.2)
@@ -85,7 +87,7 @@ class Deme(object):
                                 )
                             self.cells.add(new_cell)
                         else:
-                            disperse = np.random.binomial(1, new_cell.dispersal_rate)
+                            disperse = np.random.binomial(1, self.dispersal_rate)
                             if disperse:
                                 possible_demes = self.tumor.get_neighboring_demes(self)
                                 target_deme = np.random.choice(possible_demes)

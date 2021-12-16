@@ -7,7 +7,7 @@ import logging
 
 
 class Tumor(object):
-    def __init__(self, cell, grid_size=10, carrying_capacity=1, seed=42):
+    def __init__(self, cell, grid_size=10, carrying_capacity=1, seed=42, **kwargs):
         self.grid_size = grid_size
         self.carrying_capacity = carrying_capacity
         self.seed = seed
@@ -26,6 +26,7 @@ class Tumor(object):
                     division_rate=cell.division_rate,
                     max_birth_rate=cell.max_birth_rate,
                     carrying_capacity=self.carrying_capacity,
+                    **kwargs
                 )
                 self.deme_list.append(deme)
                 row.append(deme)

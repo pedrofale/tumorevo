@@ -3,6 +3,7 @@ from .deme import Deme
 import numpy as np
 
 from collections import Counter
+import logging
 
 class Tumor(object):
     def __init__(self, cell, grid_size=10, carrying_capacity=1, seed=42):
@@ -17,7 +18,8 @@ class Tumor(object):
         for x in range(self.grid_size):
             row = []
             for y in range(self.grid_size):
-                deme = Deme(tumor=self, x=x, y=y, division_rate=cell.division_rate, max_birth_rate=cell.max_birth_rate)
+                deme = Deme(tumor=self, x=x, y=y, division_rate=cell.division_rate,
+                            max_birth_rate=cell.max_birth_rate, carrying_capacity=self.carrying_capacity)
                 self.deme_list.append(deme)
                 row.append(deme)
             self.grid.append(row)
@@ -53,10 +55,12 @@ class Tumor(object):
         return grid
 
     def update_genotype_parents(self):
+        self.genotypes_parents = dict()
         for deme in self.deme_list:
             self.genotypes_parents.update(deme.genotypes_parents)
 
     def update_genotype_counts(self):
+        self.genotypes_counts = Counter()
         for deme in self.deme_list:
             self.genotypes_counts = self.genotypes_counts + deme.genotypes_counts
 

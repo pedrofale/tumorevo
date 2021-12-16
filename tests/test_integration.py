@@ -10,7 +10,7 @@ from tumorevo.tumorsim.cell import TumorCell
 
 MODE_LIST = [
     simulate_nonspatial,
-    # simulate_invasion,
+    simulate_invasion,
     # simulate_fission,
     # simulate_boundary,
 ]

@@ -160,7 +160,7 @@ def plot_tree(
     if filter_clones:
         for clone in genotype_parents.columns:
             if clone != root:
-                if genotype_counts[clone] == 0:
+                if genotype_counts[clone] < 2:
                     if clone in new_parent_dict.values():
                         # Get children and attach to parent of this node
                         children_pos = [
@@ -201,4 +201,13 @@ def plot_tree(
         labels=label_values,
         ax=ax,
     )
+
+    # Fix the margins
+    x_values, y_values = zip(*pos.values())
+    x_min, x_max = (min(x_values), max(x_values))
+    y_min, y_max = (min(y_values), max(y_values))
+    x_margin = (x_max - x_min) * 0.25
+    ax.set_xlim(x_min - x_margin, x_max + x_margin)
+    y_margin = (y_max - y_min) * 0.25
+    ax.set_ylim(y_min - y_margin, y_max + y_margin)
     return ax

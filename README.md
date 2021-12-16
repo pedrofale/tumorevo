@@ -7,7 +7,7 @@ Simulate tumor evolution under different spatial constraints. This package aims 
 `tumorevo` simulates tumor growth and and produces a Muller plot, a cartoon of the 2D spatial organization of the tumor cells, and a clone tree.
 
 <div align="center">
-  <img src="https://github.com/pedrofale/tumorevo/raw/main/figures/example.png", width="300px">
+  <img src="https://github.com/pedrofale/tumorevo/raw/main/figures/example.png", width="700px">
 </div>
 
 ## Installation
@@ -24,13 +24,14 @@ $ pip install tumorevo
 `tumorsim` can be used to simulate the evolution of a tumor according to a specified spatial structure.
 ```bash
 $ tumorsim --mode 1 --steps 2000 --genes 20 --carrying-capacity 5 --grid-size 20 --division-rate 0.2 --dispersal-rate 0.1
-100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1999/1999 [00:07<00:00, 251.69it/s]
+100%|████████████████████| 1999/1999 [00:07<00:00, 251.69it/s]
 ```
 
 This will create a folder containing:
 * `parents.csv`: file indicating each clones's parent;
 * `trace_counts.csv`: file indicating the number of cells of each clone at each time step;
-* `genotypes.csv`: file containing the genotypes of each clone.
+* `genotypes.csv`: file containing the genotypes of each clone;
+* `grid.csv`: file containing the regular grid of genotypes if `mode` > 0.
 
 Full overview:
 ```

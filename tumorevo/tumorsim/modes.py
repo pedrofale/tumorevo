@@ -10,18 +10,18 @@ def simulate_nonspatial(n_steps, cell, **kwargs):
     # Prevent cell from migrating
     cell.dispersal_rate = 0
 
-    # Create Deme
-    deme = Tumor(cell, **kwargs)
+    # Initialise tumor with single cell
+    tumor = Tumor(cell, **kwargs)
 
     traces = []
-    traces.append(dict(genotypes_counts=deepcopy(deme.genotypes_counts)))
+    traces.append(dict(genotypes_counts=deepcopy(tumor.genotypes_counts)))
     # Simulate within-deme dynamics
     for step in tqdm(range(n_steps - 1)):
-        deme.update()
-        traces.append(dict(genotypes_counts=deepcopy(deme.genotypes_counts)))
+        tumor.update()
+        traces.append(dict(genotypes_counts=deepcopy(tumor.genotypes_counts)))
 
-    # Return Deme
-    return deme, traces
+    # Return tumor
+    return tumor, traces
 
 
 def simulate_invasion(n_steps, cell, **kwargs):

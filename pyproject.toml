@@ -20,7 +20,7 @@ tqdm = "^4.57.0"
 
 [tool.poetry.dev-dependencies]
 bump2version = "^1.0.1"
-black = "^21.7b0"
+black = "^22.3.0"
 pytest = "^6.2.4"
 
 [tool.poetry.scripts]

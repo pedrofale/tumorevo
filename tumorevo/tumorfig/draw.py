@@ -39,10 +39,15 @@ from pymuller import muller
 @click.option(
     "--normalize", is_flag=True, help="Normalize the abundances in the Muller plot."
 )
+@click.option("--smoothing-std", default=10)
 @click.option("--labels", is_flag=True, help="Annotate the clone tree plot.")
 @click.option(
     "--remove", is_flag=True, help="Remove empty clones in the clone tree plot."
 )
+@click.option(
+        "--file-format", default="png")
+@click.option(
+        "--suffix", default="")
 @click.option(
     "-o", "--output-path", default="./", help="Directory to write figures into."
 )
@@ -59,8 +64,11 @@ def main(
     do_slice,
     do_tree,
     normalize,
+    smoothing_std,
     labels,
     remove,
+    file_format,
+    suffix,
     output_path,
 ):
     genotype_counts = pd.read_csv(genotype_counts, index_col=0)
@@ -82,6 +90,7 @@ def main(
             colormap=colormap,
             normalize=normalize,
             background_strain=False,
+            smoothing_std=smoothing_std,
         )
         plt.axis("off")
 
@@ -114,6 +123,7 @@ def main(
     else:
         Path(output_path).mkdir(parents=True, exist_ok=True)
         if do_muller:
+            print("Plotting Muller diagram...")
             ax = muller(
                 pop_df,
                 anc_df,
@@ -121,10 +131,13 @@ def main(
                 colorbar=False,
                 colormap=colormap,
                 normalize=normalize,
+                background_strain=False,
+                smoothing_std=smoothing_std,
             )
             plt.axis("off")
             plt.savefig(
-                os.path.join(output_path, "muller.pdf"), dpi=dpi, bbox_inches="tight"
+                os.path.join(output_path, f"muller{suffix}.{file_format}"), dpi=dpi, bbox_inches="tight",
+                transparent=True
             )
 
         if do_slice:
@@ -139,9 +152,10 @@ def main(
                     colormap=colormap,
                 )
             else:
-                ax = plot_grid(grid, cmap)
+                ax = plot_grid(grid, cmap, genotypes)
             plt.savefig(
-                os.path.join(output_path, "slice.pdf"), dpi=dpi, bbox_inches="tight"
+                os.path.join(output_path, f"slice{suffix}.{file_format}"), dpi=dpi, bbox_inches="tight",
+                transparent=True
             )
 
         if do_tree:
@@ -156,7 +170,8 @@ def main(
                 colormap=colormap,
             )
             plt.savefig(
-                os.path.join(output_path, "tree.pdf"), dpi=dpi, bbox_inches="tight"
+                os.path.join(output_path, f"tree{suffix}.{file_format}"), dpi=dpi, bbox_inches="tight",
+                transparent=True
             )
 
 

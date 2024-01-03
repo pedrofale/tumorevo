@@ -124,6 +124,7 @@ def plot_grid(
         color_grid[idx] = colormap[i]
     ax.imshow(color_grid)
     plt.axis("off")
+    return ax
 
 
 def plot_tree(

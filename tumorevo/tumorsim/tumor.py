@@ -7,10 +7,9 @@ import logging
 
 
 class Tumor(object):
-    def __init__(self, cell, grid_size=10, carrying_capacity=1, seed=42, **kwargs):
+    def __init__(self, cell, grid_size=10, carrying_capacity=1,**kwargs):
         self.grid_size = grid_size
         self.carrying_capacity = carrying_capacity
-        self.seed = seed
 
         # Initialize grid of empty demes
         self.positions = []
@@ -86,11 +85,15 @@ class Tumor(object):
 
         return possible_demes
 
-    def update(self):
+    def update(self, treat=False, treatment_target=None, rng=None):
+        cells_killed = 0
+
         deme_list = [deme for deme in self.deme_list if len(deme.cells) > 0]
-        demes = np.random.choice(deme_list, size=min(10, len(deme_list)), replace=False)
+        demes = rng.choice(deme_list, size=min(10, len(deme_list)), replace=False)
         for deme in demes:
-            deme.update()
+            cells_killed += deme.update(treat=treat, treatment_target=treatment_target, rng=rng)
 
         self.update_genotype_parents()
         self.update_genotype_counts()
+
+        return cells_killed

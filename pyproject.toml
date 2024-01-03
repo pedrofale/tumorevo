@@ -14,15 +14,16 @@ numpy = "^1.21.2"
 pymuller = "^0.1.2"
 click = "^8.0.1"
 packcircles = "^0.14"
-networkx = "^2.6.2"
-pygraphviz = "^1.7"
+networkx = "^3.1"
+pygraphviz = "^1.11"
 tqdm = "^4.57.0"
+celluloid = ">=0.2.0"
 
 [tool.poetry.dev-dependencies]
 bump2version = "^1.0.1"
-black = "^22.3.0"
+black = "^23.7.0"
 pytest = "^6.2.4"
 
 [tool.poetry.scripts]
 tumorsim = "tumorevo.tumorsim:main"
-tumorfig = "tumorevo.tumorfig:main"
+tumorfig = "tumorevo.tumorfig.draw:main"

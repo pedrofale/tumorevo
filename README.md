@@ -4,7 +4,7 @@
 [![Tests](https://github.com/pedrofale/tumorevo/actions/workflows/main.yaml/badge.svg)](https://github.com/pedrofale/tumorevo/actions/workflows/main.yaml)
 
 Simulate tumor evolution under different spatial constraints. This package aims to be as awesome as [demon](https://github.com/robjohnnoble/demon_model).
-`tumorevo` simulates tumor growth and and produces a Muller plot, a cartoon of the 2D spatial organization of the tumor cells, and a clone tree.
+`tumorevo` simulates tumor growth and and produces a Muller plot, a 2D slice of the tumor, and a clone tree.
 
 ## Installation
 

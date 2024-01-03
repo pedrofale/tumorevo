@@ -27,3 +27,4 @@ pytest = "^6.2.4"
 [tool.poetry.scripts]
 tumorsim = "tumorevo.tumorsim:main"
 tumorfig = "tumorevo.tumorfig.draw:main"
+tumorgif = "tumorevo.tumorfig.animate:main"

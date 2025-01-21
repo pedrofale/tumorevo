@@ -1,0 +1,4 @@
+n_reads: 5000
+n_spots_x: 10
+n_spots_y: 10
+spot_radius: 2

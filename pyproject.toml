@@ -6,11 +6,12 @@ license = "MIT"
 authors = ["pedrofale <pedro.miguel.ferreira.pf@gmail.com>"]
 readme = "README.md"
 repository = "https://github.com/pedrofale/tumorevo"
+packages = [{include = "tumorevo", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
-pandas = "^1.3.2"
-numpy = "^1.21.2"
+python = ">=3.10,<3.14"
+pandas = "^2.2.3"
+numpy = "^1.24.4"
 pymuller = "^0.1.2"
 click = "^8.0.1"
 packcircles = "^0.14"
@@ -18,13 +19,20 @@ networkx = "^3.1"
 pygraphviz = "^1.11"
 tqdm = "^4.57.0"
 celluloid = ">=0.2.0"
+pyyaml= "^6.0.2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 bump2version = "^1.0.1"
 black = "^23.7.0"
 pytest = "^6.2.4"
 
+[tool.poetry.group.extra.dependencies]
+jupyterlab = "^4.3.4"
+squidpy = "^1.6.1"
+scanpy = "^1.10.4"
+
 [tool.poetry.scripts]
 tumorsim = "tumorevo.tumorsim:main"
+tumorsample = "tumorevo.tumorsample:main"
 tumorfig = "tumorevo.tumorfig.draw:main"
 tumorgif = "tumorevo.tumorfig.animate:main"

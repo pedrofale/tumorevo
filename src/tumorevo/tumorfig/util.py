@@ -42,9 +42,9 @@ def get_colormap(populations_df, adjacency_df, color_by, colormap):
     norm = matplotlib.colors.Normalize(
         vmin=np.min(ordered_colors), vmax=np.max(ordered_colors)
     )
-    color_map = cmap(norm(ordered_colors.values))
+    color_list = cmap(norm(ordered_colors.values))
     # color_map[0] = color_map[-1] = [1, 1, 1, 1]
-    return color_map, final_order
+    return color_list, final_order
 
 
 def plot_deme(
@@ -118,13 +118,44 @@ def plot_grid(
     else:
         plt.sca(ax)
     # Turn the genotype grid into grid of colors
-    color_grid = np.zeros((genotype_grid.shape[0], genotype_grid.shape[1], 4))
+    color_grid = np.zeros((genotype_grid.shape[0], genotype_grid.shape[1], 4)) + 1.
+    color_grid[:,:,-1] = 1.
     for i, genotype in enumerate(genotypes):
         idx = np.where(genotype_grid == genotype)
         color_grid[idx] = colormap[i]
     ax.imshow(color_grid)
     plt.axis("off")
     return ax
+
+
+def expand_grid(
+    genotype_counts_grid, # dataframe of index x,y and genotypes in columns
+    original_grid_side,
+    minigrid_side, 
+):
+    """If each entry is a deme with many cells, expand each entry to a grid of specified size
+    and color the entries in there by the proportion of the genotype_ids present in it
+    Returns a genotype grid
+    """
+    new_grid_side = original_grid_side * minigrid_side
+    new_grid = np.zeros((new_grid_side, new_grid_side), dtype=object)
+
+    cnt = 0
+    for ij in genotype_counts_grid.index:
+        deme_i, deme_j = np.array(ij.split(',')).astype(int).tolist()
+        deme_i_start, deme_j_start = deme_i * minigrid_side, deme_j * minigrid_side
+        deme_i_end, deme_j_end = deme_i_start + minigrid_side, deme_j_start + minigrid_side
+        for pos_x in range(deme_i_start, deme_i_end):
+            for pos_y in range(deme_j_start, deme_j_end):
+                # Sample genotype positions in each grid point
+                rng = np.random.default_rng(cnt)
+                counts = genotype_counts_grid.loc[ij]
+                if np.sum(counts) == 0:
+                    new_grid[pos_x,pos_y] = ""
+                else:
+                    new_grid[pos_x,pos_y] = rng.choice(genotype_counts_grid.columns, p=counts/np.sum(counts))
+                cnt += 1
+    return new_grid
 
 
 def plot_tree(

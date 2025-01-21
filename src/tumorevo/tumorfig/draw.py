@@ -2,6 +2,7 @@
 Create a cartoon of a tumor given the frequencies of different genotypes.
 """
 from .util import *
+from ..constants import *
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -30,6 +31,7 @@ from pymuller import muller
     help="Average radius of circles in slice plot.",
 )
 @click.option("--grid-file", default="", help="Path to grid file.")
+@click.option("--deme-counts-file", default="", help="Path to genotype counts per deme file.")
 @click.option("--colormap", default="gnuplot", help="Colormap for genotypes.")
 @click.option("--dpi", default=100, help="DPI for figures.")
 @click.option("--plot", is_flag=True, help="Plot all the figures.")
@@ -45,11 +47,14 @@ from pymuller import muller
     "--remove", is_flag=True, help="Remove empty clones in the clone tree plot."
 )
 @click.option(
+    "--expand", default=1, help="Expand each grid into a grid of this side"
+)
+@click.option(
         "--file-format", default="png")
 @click.option(
         "--suffix", default="")
 @click.option(
-    "-o", "--output-path", default="./", help="Directory to write figures into."
+    "-o", "--output-path", default="./fig_out", help="Directory to write figures into."
 )
 def main(
     genotype_counts,
@@ -57,6 +62,7 @@ def main(
     cells,
     average_radius,
     grid_file,
+    deme_counts_file,
     colormap,
     dpi,
     plot,
@@ -67,6 +73,7 @@ def main(
     smoothing_std,
     labels,
     remove,
+    expand,
     file_format,
     suffix,
     output_path,
@@ -76,8 +83,28 @@ def main(
     if grid_file != "":
         grid = pd.read_csv(grid_file, index_col=0, dtype=str)
 
+    if deme_counts_file != "" and expand > 1:   
+        genotype_counts_grid = pd.read_csv(deme_counts_file, index_col=0)
+        grid = expand_grid(
+                genotype_counts_grid, # dataframe of index x,y and genotypes in columns
+                grid.shape[0],
+                expand)
+
+    # Keep only cancer cell statistics
+    genotype_counts = genotype_counts.drop(columns=list(set(normal_names).intersection(set(genotype_counts.columns))))
+    genotype_parents = genotype_parents.drop(columns=list(set(normal_names).intersection(set(genotype_counts.columns))))
+
     pop_df, anc_df, color_by = prepare_plots(genotype_counts, genotype_parents)
-    cmap, genotypes = get_colormap(pop_df, anc_df, color_by, colormap)
+    if anc_df.empty:
+        c = np.zeros((4,))
+        c[-1] = 1.
+        cmap = [c]
+        deme_ids = [pop_df.iloc[0]['Identity']]
+    else:
+        cmap, deme_ids = get_colormap(pop_df, anc_df, color_by, colormap) # only make genotype colormap for cancer cells, for the others use fixed
+    # Add normal cells in grid plot
+    cmap = np.vstack([cmap, normal_colors_rgba])
+    deme_ids = np.concatenate([deme_ids, normal_names])
 
     if plot:
         fig, ax_list = plt.subplots(ncols=3, sharex=False, dpi=dpi, figsize=(8, 2))
@@ -106,7 +133,7 @@ def main(
                 ax=ax_list[1],
             )
         else:
-            plot_grid(grid, cmap, genotypes, ax=ax_list[1])
+            plot_grid(grid, cmap, deme_ids, ax=ax_list[1])
 
         plot_tree(
             genotype_parents,
@@ -152,7 +179,7 @@ def main(
                     colormap=colormap,
                 )
             else:
-                ax = plot_grid(grid, cmap, genotypes)
+                ax = plot_grid(grid, cmap, deme_ids)
             plt.savefig(
                 os.path.join(output_path, f"slice{suffix}.{file_format}"), dpi=dpi, bbox_inches="tight",
                 transparent=True

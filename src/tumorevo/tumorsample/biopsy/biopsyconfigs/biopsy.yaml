@@ -1,0 +1,1 @@
+fraction: .8 # per region; must add up to maximum of 1 if n_regions > 1

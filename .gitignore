@@ -2,3 +2,5 @@ __pycache__/
 dist/
 out/
 poetry.lock
+notebooks/.ipynb_checkpoints
+.DS_Store
